@@ -1,9 +1,12 @@
 <div class="top-bar">
     <div style="flex-grow: 2">
-        <span class="material-icons">
+        <div class="spinner" *ngIf="appComponent.getSpinner()"></div>
+        <span class="material-icons" *ngIf="!appComponent.getSpinner()"
+         [ngStyle]="{'color': appComponent.getIfUpdated()? 'blue': 'white'}" >
             notifications
         </span>
-        Notification for IAGL
+        &nbsp;
+        {{appComponent.getNotification()}}
     </div>
     <div style="flex-grow: 4" class="logotext">
         <span class="material-icons">

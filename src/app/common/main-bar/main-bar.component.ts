@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { BaseGitContentModel, cleanData } from 'src/app/models/iagl/base_model';
 import { GameItemType, GameMenuItem } from 'src/app/models/ui/game-item';
+import { FetchIaglService } from "./../../services/fetch-iagl.service";
+import { TopBarComponent } from "./../../common/top-bar/top-bar.component";
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-main-bar',
@@ -8,10 +12,11 @@ import { GameItemType, GameMenuItem } from 'src/app/models/ui/game-item';
 })
 export class MainBarComponent implements OnInit {
   gameItems: GameMenuItem[] = [];
-  constructor() { }
+  constructor(private fetchIaglService: FetchIaglService, public appComponent: AppComponent) { }
 
   ngOnInit(): void {
     this.addItems();
+    this.getListFromIAGL();
   }
 
   addItems() {
@@ -55,6 +60,25 @@ export class MainBarComponent implements OnInit {
 
 
     ]
+  }
+
+  getListFromIAGL() {
+    this.appComponent.spinnerStart("Fetching from IAGL");
+    this.fetchIaglService.getAllSystemXMLs().subscribe((data: BaseGitContentModel[]) => {
+      cleanData(data);
+      this.processAllSystems(data);
+      this.appComponent.spinnerStop("IAGL fetch success");
+    },
+      error => {
+        this.appComponent.spinnerStop("IAGL fetch failed");
+      });
+  }
+
+  processAllSystems(datalist: BaseGitContentModel[]) {
+    for (let data of datalist) {
+      console.log(data.name);
+      console.log(data.download_url);
+    }
   }
 
 

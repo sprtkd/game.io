@@ -8,6 +8,7 @@ import { TopBarComponent } from './common/top-bar/top-bar.component';
 import { MainBarComponent } from './common/main-bar/main-bar.component';
 import { MenuItemComponent } from './common/menu-item/menu-item.component';
 import { ActionBarComponent } from './common/action-bar/action-bar.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ActionBarComponent } from './common/action-bar/action-bar.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

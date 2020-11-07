@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -8,10 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TopBarComponent implements OnInit {
   nowtime: string;
-  constructor() { }
+  
+  constructor(public appComponent: AppComponent) { }
 
   ngOnInit(): void {
-    this.dateRefresh()
+    this.dateRefresh();
   }
 
   dateRefresh() {
@@ -19,4 +21,5 @@ export class TopBarComponent implements OnInit {
       this.nowtime = formatDate(new Date(), 'MMM d, y h:mm a', 'en-US');
     }, 50);
   }
+  
 }
