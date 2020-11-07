@@ -1,0 +1,14 @@
+<div class="card" (mouseenter)="gameItem.active=true" (mouseleave)="gameItem.active=false">
+    <div class="footer" *ngIf="gameItem.active">
+        <span *ngIf="gameItem.type == 'game'" class="material-icons">
+            play_circle_filled
+        </span>
+        <span *ngIf="gameItem.type == 'submenu'" class="material-icons">
+            arrow_circle_down
+        </span>
+    </div>
+    <img [src]="gameItem.url" alt="Avatar" style="width:100%">
+    <div class="game-name" *ngIf="gameItem.active">
+        {{gameItem.name}}
+    </div>
+</div>

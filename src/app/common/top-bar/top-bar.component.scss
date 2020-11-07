@@ -1,0 +1,23 @@
+.top-bar {
+    height: 30px;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.top-bar > div {
+    color: rgba(255, 255, 255, 0.863);
+    margin: 2px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.material-icons {
+    display: inline-flex;
+    vertical-align: top;
+    padding-right: 5px;
+}
+
+.logotext {
+    color: rgb(255, 255, 255) !important;
+}

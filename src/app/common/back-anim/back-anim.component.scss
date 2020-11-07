@@ -1,0 +1,44 @@
+.box {
+    position: fixed;
+    top: 0;
+    transform: rotate(80deg);
+    left: 0;
+    z-index:-1;
+}
+
+.wave {
+    position: absolute;
+    opacity: 0.4;
+    width: 1500px;
+    height: 1400px;
+    margin-left: -120px;
+    margin-top: -550px;
+    border-radius: 63%;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(360deg);
+    }
+}
+
+.wave.-one {
+    animation: rotate 7000ms infinite linear;
+    opacity: 0.2;
+    background: rgb(0, 55, 175);
+}
+
+.wave.-two {
+    animation: rotate 3000ms infinite linear;
+    opacity: 0.1;
+    background: black;
+}
+
+.wave.-three {
+    opacity: 0.4;
+    animation: rotate 7500ms infinite linear;
+    background-color: #77daff;
+}
