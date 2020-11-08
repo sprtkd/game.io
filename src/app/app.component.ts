@@ -17,7 +17,7 @@ export class AppComponent {
   notificationCleaner() {
     setInterval(() => {
       if ((!this.isSpinning) && (this.lastNotificationSetTime == null
-        || ((new Date().getTime() - this.lastNotificationSetTime.getTime()) / 1000) > 2)) {
+        || ((new Date().getTime() - this.lastNotificationSetTime.getTime()) / 1000) > 4)) {
         this.notifyMsg = "No Notification";
         this.lastNotificationSetTime = null;
       }
@@ -25,16 +25,15 @@ export class AppComponent {
   }
   spinnerStart(msg: string) {
     this.isSpinning = true;
-    this.notifyMsg = msg;
-    this.lastNotificationSetTime = new Date();
+    this.notify(msg, undefined);
   }
 
-  spinnerStop(msg: string) {
+  spinnerStop(msg: string, error?: Error) {
     this.isSpinning = false;
-    this.notifyMsg = msg;
-    this.lastNotificationSetTime = new Date();
+    this.notify(msg, error);
   }
-  notify(msg: string) {
+  notify(msg: string, error?: Error) {
+    if (error) { console.log(error); }
     this.notifyMsg = msg;
     this.lastNotificationSetTime = new Date();
   }
@@ -48,6 +47,6 @@ export class AppComponent {
   }
 
   getIfUpdated() {
-    return this.lastNotificationSetTime!=null;
+    return this.lastNotificationSetTime != null;
   }
 }

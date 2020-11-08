@@ -1,10 +1,9 @@
 <div class="main-menu-row custom-scroll">
-    <div *ngFor="let game of gameItems">
+    <div *ngFor="let game of currentMenu.nextItems">
         <app-menu-item [gameItem]="game"></app-menu-item>
     </div>
 </div>
-<app-action-bar [gameItems]="gameItems"></app-action-bar>
-
+<app-action-bar [gameItems]="currentMenu.nextItems"></app-action-bar>
 <div class="bottom-div">
-    {{menuName}} | {{menuCountDetail}}
+    {{currentMenu.name}} | {{currentMenu.countDetail}}
 </div>

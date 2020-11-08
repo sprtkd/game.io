@@ -1,3 +1,5 @@
+import { GameElement } from '../iagl/iagl_system_parser_roms';
+
 export interface GameMenuItem {
     name: string;
     url: string;
@@ -6,10 +8,20 @@ export interface GameMenuItem {
     isHashBorder: boolean;
     description?: string;
     countDetail?: string;
+    prev: string;
+    next: string;
+    nextItems: GameMenuItem[];
+    cache?: GameCache
 }
 
 export enum GameItemType {
     GAME = "game",
     SUBMENU = "submenu",
-    SYSTEM = "system"
+    SYSTEM = "system",
+    MASTER = "master"
+}
+
+export interface GameCache {
+    gameListCache?: GameElement[] | GameElement;
+    giantBombUrl?: string;
 }

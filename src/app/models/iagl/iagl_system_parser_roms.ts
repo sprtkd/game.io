@@ -1,200 +1,62 @@
-// To parse this data:
-//
-//   import { Convert, IAGLSystem } from "./file";
-//
-//   const iAGLSystem = Convert.toIAGLSystem(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
-
 export interface IAGLSystem {
-    declaration?: Declaration;
-    datafile?:    Datafile;
+    datafile: Datafile;
 }
 
 export interface Datafile {
-    header?: { [key: string]: Header };
-    game?:   any[] | any;
+    header: { [key: string]: Header };
+    game: GameElement[] | GameElement;
 }
-export interface Game {
+
+export interface GameElement {
+    _attributes: GameAttributes;
+    description: Header;
+    rom: ROMElement[] | ROMElement;
+    title_clean?: Header;
+    plot?: Header;
+    year?: Header;
+    genre?: Header;
+    studio?: Header;
+    perspective?: Header;
+    rating?: Header;
+    thegamesdb_id?: Header;
+    mobygames_url?: Header;
+    giantbomb_url?: Header;
 }
 
 export interface Header {
-    text?: string;
+    _text?: string;
 }
 
-export interface Declaration {
-    attributes?: Attributes;
+export interface GameAttributes {
+    name: string;
 }
 
-export interface Attributes {
-    version?:  string;
-    encoding?: string;
+export interface ROMElement {
+    _attributes: PurpleAttributes;
 }
 
-// Converts JSON strings to/from your types
-// and asserts the results of JSON.parse at runtime
-export class Convert {
-    public static toIAGLSystem(json: string): IAGLSystem {
-        return cast(JSON.parse(json), r("IAGLSystem"));
-    }
-
-    public static iAGLSystemToJson(value: IAGLSystem): string {
-        return JSON.stringify(uncast(value, r("IAGLSystem")), null, 2);
-    }
+export interface PurpleAttributes {
+    name: string;
+    size: string;
 }
 
-function invalidValue(typ: any, val: any, key: any = ''): never {
-    if (key) {
-        throw Error(`Invalid value for key "${key}". Expected type ${JSON.stringify(typ)} but got ${JSON.stringify(val)}`);
-    }
-    throw Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`, );
+export interface GameElement {
+    _attributes: GameAttributes;
+    description: Header;
+    rom: ROMElement[] | ROMElement;
+    title_clean?: Header;
+    plot?: Header;
+    year?: Header;
+    genre?: Header;
+    studio?: Header;
+    perspective?: Header;
+    rating?: Header;
+    thegamesdb_id?: Header;
+    mobygames_url?: Header;
+    giantbomb_url?: Header;
 }
 
-function jsonToJSProps(typ: any): any {
-    if (typ.jsonToJS === undefined) {
-        const map: any = {};
-        typ.props.forEach((p: any) => map[p.json] = { key: p.js, typ: p.typ });
-        typ.jsonToJS = map;
-    }
-    return typ.jsonToJS;
+export function ConvertIaglSystem(json: string) {
+    let objSystem: IAGLSystem = JSON.parse(json);
+    return objSystem;
 }
-
-function jsToJSONProps(typ: any): any {
-    if (typ.jsToJSON === undefined) {
-        const map: any = {};
-        typ.props.forEach((p: any) => map[p.js] = { key: p.json, typ: p.typ });
-        typ.jsToJSON = map;
-    }
-    return typ.jsToJSON;
-}
-
-function transform(val: any, typ: any, getProps: any, key: any = ''): any {
-    function transformPrimitive(typ: string, val: any): any {
-        if (typeof typ === typeof val) return val;
-        return invalidValue(typ, val, key);
-    }
-
-    function transformUnion(typs: any[], val: any): any {
-        // val must validate against one typ in typs
-        const l = typs.length;
-        for (let i = 0; i < l; i++) {
-            const typ = typs[i];
-            try {
-                return transform(val, typ, getProps);
-            } catch (_) {}
-        }
-        return invalidValue(typs, val);
-    }
-
-    function transformEnum(cases: string[], val: any): any {
-        if (cases.indexOf(val) !== -1) return val;
-        return invalidValue(cases, val);
-    }
-
-    function transformArray(typ: any, val: any): any {
-        // val must be an array with no invalid elements
-        if (!Array.isArray(val)) return invalidValue("array", val);
-        return val.map(el => transform(el, typ, getProps));
-    }
-
-    function transformDate(val: any): any {
-        if (val === null) {
-            return null;
-        }
-        const d = new Date(val);
-        if (isNaN(d.valueOf())) {
-            return invalidValue("Date", val);
-        }
-        return d;
-    }
-
-    function transformObject(props: { [k: string]: any }, additional: any, val: any): any {
-        if (val === null || typeof val !== "object" || Array.isArray(val)) {
-            return invalidValue("object", val);
-        }
-        const result: any = {};
-        Object.getOwnPropertyNames(props).forEach(key => {
-            const prop = props[key];
-            const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
-            result[prop.key] = transform(v, prop.typ, getProps, prop.key);
-        });
-        Object.getOwnPropertyNames(val).forEach(key => {
-            if (!Object.prototype.hasOwnProperty.call(props, key)) {
-                result[key] = transform(val[key], additional, getProps, key);
-            }
-        });
-        return result;
-    }
-
-    if (typ === "any") return val;
-    if (typ === null) {
-        if (val === null) return val;
-        return invalidValue(typ, val);
-    }
-    if (typ === false) return invalidValue(typ, val);
-    while (typeof typ === "object" && typ.ref !== undefined) {
-        typ = typeMap[typ.ref];
-    }
-    if (Array.isArray(typ)) return transformEnum(typ, val);
-    if (typeof typ === "object") {
-        return typ.hasOwnProperty("unionMembers") ? transformUnion(typ.unionMembers, val)
-            : typ.hasOwnProperty("arrayItems")    ? transformArray(typ.arrayItems, val)
-            : typ.hasOwnProperty("props")         ? transformObject(getProps(typ), typ.additional, val)
-            : invalidValue(typ, val);
-    }
-    // Numbers can be parsed by Date but shouldn't be.
-    if (typ === Date && typeof val !== "number") return transformDate(val);
-    return transformPrimitive(typ, val);
-}
-
-function cast<T>(val: any, typ: any): T {
-    return transform(val, typ, jsonToJSProps);
-}
-
-function uncast<T>(val: T, typ: any): any {
-    return transform(val, typ, jsToJSONProps);
-}
-
-function a(typ: any) {
-    return { arrayItems: typ };
-}
-
-function u(...typs: any[]) {
-    return { unionMembers: typs };
-}
-
-function o(props: any[], additional: any) {
-    return { props, additional };
-}
-
-function m(additional: any) {
-    return { props: [], additional };
-}
-
-function r(name: string) {
-    return { ref: name };
-}
-
-const typeMap: any = {
-    "IAGLSystem": o([
-        { json: "_declaration", js: "declaration", typ: u(undefined, r("Declaration")) },
-        { json: "datafile", js: "datafile", typ: u(undefined, r("Datafile")) },
-    ], false),
-    "Datafile": o([
-        { json: "header", js: "header", typ: u(undefined, m(r("Header"))) },
-        { json: "game", js: "game", typ: u(undefined, a("any"), r("Game")) },
-    ], false),
-    "Game": o([
-    ], false),
-    "Header": o([
-        { json: "_text", js: "text", typ: u(undefined, "") },
-    ], false),
-    "Declaration": o([
-        { json: "_attributes", js: "attributes", typ: u(undefined, r("Attributes")) },
-    ], false),
-    "Attributes": o([
-        { json: "version", js: "version", typ: u(undefined, "") },
-        { json: "encoding", js: "encoding", typ: u(undefined, "") },
-    ], false),
-};
