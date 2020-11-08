@@ -19,4 +19,13 @@ export class FetchIaglService {
       );
 
   }
+
+  getXmlData(url: string) {
+    return this.http.get(url, { responseType: 'text' })
+      .pipe(
+        catchError(this.errorHandlerService.handleError)
+      );
+
+  }
+
 }

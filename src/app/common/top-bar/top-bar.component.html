@@ -1,5 +1,5 @@
 <div class="top-bar">
-    <div style="flex-grow: 2">
+    <div style="flex-grow: 6">
         <div class="spinner" *ngIf="appComponent.getSpinner()"></div>
         <span class="material-icons" *ngIf="!appComponent.getSpinner()"
          [ngStyle]="{'color': appComponent.getIfUpdated()? 'blue': 'white'}" >
@@ -8,7 +8,7 @@
         &nbsp;
         {{appComponent.getNotification()}}
     </div>
-    <div style="flex-grow: 4" class="logotext">
+    <div style="flex-grow: 3" class="logotext">
         <span class="material-icons">
             videogame_asset
         </span>

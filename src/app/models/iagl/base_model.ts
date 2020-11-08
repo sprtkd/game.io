@@ -4,15 +4,21 @@ export interface BaseGitContentModel {
     type: string;
 }
 
-export function cleanData(datalist: BaseGitContentModel[]) {
-    let ending = "_ZachMorris.xml";
-    let ending2 = ".xml";
-    for (let data of datalist) {
-        if(data.name.endsWith(ending)) {
-            data.name = data.name.substring(0,data.name.indexOf(ending));
-        } else if(data.name.endsWith(ending2)) {
-            data.name = data.name.substring(0,data.name.indexOf(ending2));
-        }
-        data.name = data.name.split('_').join(' ');
-      }
+export interface SystemIAGLModel {
+    name: string;
+    basename: string;
+    description: string;
+    category: string;
+    base_url: string;
+    media: IAGLMedia;
+    gamesCount: number;
+    gameslist: any[];
+}
+
+export interface IAGLMedia {
+    thumbnail: string;
+    banner: string;
+    fanart: string;
+    logo: string;
+    trailer: string;
 }

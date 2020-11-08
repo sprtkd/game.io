@@ -3,7 +3,7 @@ export interface GameMenuItem {
     url: string;
     type: GameItemType;
     active: boolean;
-
+    isHashBorder: boolean;
 }
 
 export enum GameItemType {

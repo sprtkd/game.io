@@ -34,6 +34,10 @@ export class AppComponent {
     this.notifyMsg = msg;
     this.lastNotificationSetTime = new Date();
   }
+  notify(msg: string) {
+    this.notifyMsg = msg;
+    this.lastNotificationSetTime = new Date();
+  }
 
   getNotification() {
     return this.notifyMsg;

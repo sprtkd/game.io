@@ -7,7 +7,8 @@
             arrow_circle_down
         </span>
     </div>
-    <img [src]="gameItem.url" alt="Avatar" style="width:100%">
+    <img [src]="gameItem.url" alt="Avatar" style="width:100%; box-sizing: border-box;"
+        [ngStyle]="{'border': gameItem.isHashBorder? hashCode(gameItem.name): 'none'}">
     <div class="game-name" *ngIf="gameItem.active">
         {{gameItem.name}}
     </div>
