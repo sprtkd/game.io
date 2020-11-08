@@ -23,5 +23,12 @@
 
 .custom-scroll::-webkit-scrollbar-thumb {
     border-radius: 15px;
-    background-image: linear-gradient(90deg ,rgb(0, 89, 255), rgb(0, 7, 99));
+    background-image: linear-gradient(90deg, rgb(0, 89, 255), rgb(0, 7, 99));
+}
+
+.bottom-div {
+    color: #ffffffe7;
+    font-size: xx-large;
+    font-weight: 900;
+    padding-left: 10px;
 }

@@ -27,7 +27,7 @@ export class MenuItemComponent implements OnInit {
 
     let retcolor = "00000".substring(0, 6 - c.length) + c;
     retcolor = '#' + retcolor;
-    return '5px solid ' + retcolor;
+    return retcolor;
   }
 
 }

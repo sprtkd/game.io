@@ -4,9 +4,12 @@ export interface GameMenuItem {
     type: GameItemType;
     active: boolean;
     isHashBorder: boolean;
+    description?: string;
+    countDetail?: string;
 }
 
 export enum GameItemType {
-    GAME="game",
-    SUBMENU="submenu"
+    GAME = "game",
+    SUBMENU = "submenu",
+    SYSTEM = "system"
 }

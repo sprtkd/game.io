@@ -1,6 +1,7 @@
 <div class="card" (mouseenter)="gameItem.active=true" (mouseleave)="gameItem.active=false">
-    <div class="footer" *ngIf="gameItem.active">
-        <span *ngIf="gameItem.type == 'game'" class="material-icons">
+    <div class="footer" *ngIf="gameItem.active"
+    [ngStyle]="{'background-color': gameItem.isHashBorder? hashCode(gameItem.name): 'rgba(136, 136, 136, 0.897)'}">
+        <span *ngIf="gameItem.type != 'submenu'" class="material-icons">
             play_circle_filled
         </span>
         <span *ngIf="gameItem.type == 'submenu'" class="material-icons">
@@ -8,7 +9,7 @@
         </span>
     </div>
     <img [src]="gameItem.url" alt="Avatar" style="width:100%; box-sizing: border-box;"
-        [ngStyle]="{'border': gameItem.isHashBorder? hashCode(gameItem.name): 'none'}">
+        [ngStyle]="{'border': gameItem.isHashBorder? ('5px solid ' + hashCode(gameItem.name)): 'none'}">
     <div class="game-name" *ngIf="gameItem.active">
         {{gameItem.name}}
     </div>
