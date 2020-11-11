@@ -18,7 +18,8 @@ export enum GameItemType {
     GAME = "game",
     SUBMENU = "submenu",
     SYSTEM = "system",
-    MASTER = "master"
+    MASTER = "master",
+    CACHE_CONSOLE = "cache_console"
 }
 
 export interface GameCache {

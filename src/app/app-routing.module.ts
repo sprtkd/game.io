@@ -5,8 +5,8 @@ import { SystemComponent } from './system/system.component';
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'system', component: SystemComponent },
+  { path: '', component: HomeComponent, pathMatch:'full' },
+  { path: 'system', component: SystemComponent, pathMatch:'full' },
 ];
 
 @NgModule({

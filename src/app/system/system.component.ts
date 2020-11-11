@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppComponent } from '../app.component';
-import { convertGameData } from '../models/iagl/iagl_utils';
+import { convertGameData, getGiantBombArt } from '../models/iagl/iagl_utils';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 import { getItemFromLocalStorage } from '../models/ui/viewable_utils';
 import { convertGameToViewable } from './../models/ui/viewable_utils';
@@ -35,7 +35,7 @@ export class SystemComponent implements OnInit {
   }
 
   getCurrentSystemFromLocalStorage() {
-    let currSys = getItemFromLocalStorage(GameItemType.SYSTEM);
+    let currSys = getItemFromLocalStorage(GameItemType.SUBMENU);
     if (currSys) {
       this.currentMenu = currSys;
     } else {
@@ -63,7 +63,12 @@ export class SystemComponent implements OnInit {
   }
 
   async fetchThumbnails() {
-
+    this.appComponent.spinnerStart("Scraping Art");
+    for (let game of this.currentMenu.nextItems) {
+      let url = await getGiantBombArt(game.cache?.giantBombUrl);
+      game.url = url;
+    }
+    this.appComponent.spinnerStop("Scraping finished");
   }
 
 }

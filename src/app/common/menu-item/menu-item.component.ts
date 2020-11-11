@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GameMenuItem } from "./../../models/ui/game-item";
+import { Router } from '@angular/router';
+import { saveItemToLocalStorage } from 'src/app/models/ui/viewable_utils';
+import { GameItemType, GameMenuItem } from "./../../models/ui/game-item";
 
 @Component({
   selector: 'app-menu-item',
@@ -8,13 +10,13 @@ import { GameMenuItem } from "./../../models/ui/game-item";
 })
 export class MenuItemComponent implements OnInit {
   @Input() gameItem: GameMenuItem;
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
   hashCode(str: string) {
-    if(!str) {
+    if (!str) {
       return '5px solid black'
     }
     var hash = 0;
@@ -28,6 +30,11 @@ export class MenuItemComponent implements OnInit {
     let retcolor = "00000".substring(0, 6 - c.length) + c;
     retcolor = '#' + retcolor;
     return retcolor;
+  }
+
+  takeAction() {
+    saveItemToLocalStorage(this.gameItem.type, this.gameItem);
+    this.router.navigateByUrl(this.gameItem.next);
   }
 
 }

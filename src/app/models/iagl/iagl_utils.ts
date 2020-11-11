@@ -69,16 +69,12 @@ export async function getGiantBombArt(baseurl: string) {
 
 export function convertGameData(gameToConvert: GameElement) {
     let returnGame: GameIAGLModel = {
-        name: gameToConvert.title_clean?._text,
-        category: gameToConvert.year?._text + " " +
-            gameToConvert.studio?._text + " | " + gameToConvert.genre?._text
-            + " " + gameToConvert.perspective?._text
-            + " ⚡ " + gameToConvert.rating?._text,
+        name: gameToConvert.title_clean?._text ? gameToConvert.title_clean?._text : gameToConvert._attributes.name,
+        category: getCateg(gameToConvert),
         description: gameToConvert.plot?._text,
         download_url: gameToConvert.rom instanceof Array ?
             gameToConvert.rom[0]._attributes.name : gameToConvert.rom._attributes.name,
-        gameSize: parseInt((gameToConvert.rom instanceof Array ?
-            gameToConvert.rom[0]._attributes.name : gameToConvert.rom._attributes.name)),
+        gameSize: getSize(gameToConvert),
         media: {
             banner: null,
             fanart: null,
@@ -91,13 +87,32 @@ export function convertGameData(gameToConvert: GameElement) {
     return returnGame;
 }
 
+function getSize(game: GameElement) {
+    let size = (game.rom instanceof Array ?
+        game.rom[0]._attributes.size : game.rom._attributes.size);
+    if (size) {
+        return Math.floor(parseInt(size) / (1024 * 1024));
+    } else {
+        return 0;
+    }
+}
+
+function getCateg(gameToConvert: GameElement) {
+    let text = gameToConvert.year?._text + " " +
+        gameToConvert.studio?._text + " | " + gameToConvert.genre?._text
+        + " " + gameToConvert.perspective?._text
+        + (gameToConvert.rating?._text ? " ⚡" + gameToConvert.rating?._text : "");
+    return text.split("undefined").join("");
+}
+
 var lastpush = 0;
 function randomSystemUrl() {
-    let urls = ["https://st.depositphotos.com/1734074/3308/v/950/depositphotos_33087807-stock-illustration-vector-gamepad-icon.jpg",
-        "https://www.clipartkey.com/mpngs/m/26-266487_transparent-game-controller-clip-art-mlp-gaming-cutie.png",
-        "https://i.pinimg.com/originals/83/9b/fd/839bfdc7c61b0590b7a4ef0bd6078d2b.jpg",
-        "https://us.123rf.com/450wm/iconcraftstudio/iconcraftstudio1602/iconcraftstudio160200165/52362802-game-joystick-vector-icon.jpg?ver=6",
-        "https://pixabay.com/get/54e3dd4a4853aa14f1dc8460da29317e1137dfec535373_640.png"
+    let urls = ["https://images.unsplash.com/photo-1580327332925-a10e6cb11baa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=351&q=80",
+        "https://images.unsplash.com/photo-1531390658120-e06b58d826ea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=335&q=80",
+        "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+        "https://images.pexels.com/photos/4511372/pexels-photo-4511372.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+        "https://images.unsplash.com/photo-1585424249632-f4d52f602ca7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=375&q=80",
+        "https://images.unsplash.com/photo-1554213352-5ffe6534af08?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
     ];
     let random: number;
     do {
