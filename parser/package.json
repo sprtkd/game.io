@@ -1,0 +1,28 @@
+{
+  "name": "parser",
+  "version": "1.0.0",
+  "description": "Parser for iagl xml files",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sprtkd/iagl-psui.git"
+  },
+  "keywords": [
+    "iagl",
+    "parser",
+    "games",
+    "roms"
+  ],
+  "author": "Suprotik Dey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sprtkd/iagl-psui/issues"
+  },
+  "homepage": "https://github.com/sprtkd/iagl-psui#readme",
+  "devDependencies": {
+    "ts-node": "^9.0.0"
+  }
+}
