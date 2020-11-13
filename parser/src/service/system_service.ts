@@ -2,7 +2,7 @@ import { getXmlData } from "../api/github_call";
 import { GameIAGLModel, SystemIAGLModel } from "../models/basic_models";
 import { xmlToJson } from "../utils/iagl_helper_utils";
 import { ConvertIaglSystem, GameElement, IAGLSystem } from "../utils/iagl_system_parser_roms";
-import { randomSystemImageUrl } from "./../utils/boxtart_utils";
+import { getSystemArt } from "./../utils/boxart_utils";
 import { processAllGames } from "./games_service";
 
 export async function processSystemData(url: string) {
@@ -34,7 +34,7 @@ export async function convertSystemData(jsonStr: string) {
         gamesCount: processedGamesList.length,
         gameslist: processedGamesList,
         media: {
-            thumbnail: randomSystemImageUrl()
+            thumbnail: await getSystemArt(iAGLSystemJustParsed.datafile.header.emu_description._text)
         }
     }
     return systemIAGLModel;

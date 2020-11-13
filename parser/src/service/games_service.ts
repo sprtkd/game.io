@@ -1,5 +1,5 @@
 import { GameIAGLModel, RomIAGLModel } from "../models/basic_models";
-import { resolveGameBoxArt } from "../utils/boxtart_utils";
+import { resolveGameBoxArt } from "../utils/boxart_utils";
 import { getCateg } from "../utils/iagl_helper_utils";
 import { GameElement, ROMElement } from "../utils/iagl_system_parser_roms";
 import { processAllRoms } from "./roms_service";
@@ -25,7 +25,8 @@ async function convertGameData(gameToConvert: GameElement, base_url: string) {
             romList = [gameToConvert.rom];
         }
         let boxart = await resolveGameBoxArt(gameToConvert.giantbomb_url?._text,
-            gameToConvert.thegamesdb_id?._text, gameToConvert.mobygames_url?._text);
+            gameToConvert.thegamesdb_id?._text, gameToConvert.mobygames_url?._text,
+            gameToConvert._attributes.name);
         let processedRomsList: RomIAGLModel[] = processAllRoms(romList, base_url, boxart);
         let returnGame: GameIAGLModel = {
             name: gameToConvert.title_clean?._text ?
