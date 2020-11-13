@@ -19,7 +19,7 @@ export interface GameIAGLModel {
     category: string;
     media: IAGLMedia;
     romsCount: number;
-    romsList: RomIAGLModel[] | string[];
+    romsList: RomIAGLModel[];
 }
 
 export interface IAGLMedia {

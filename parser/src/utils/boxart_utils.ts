@@ -19,7 +19,7 @@ function randomSystemImageUrl() {
 
 
 const DEFAULT_URL_GAME = "https://cdn.pixabay.com/photo/2017/06/10/07/15/game-2389215_960_720.png";
-async function getGiantBombArt(baseurl: string | undefined) {
+async function getGiantBombArt(baseurl?: string) {
     if (!baseurl) {
         return undefined;
     }
@@ -31,7 +31,7 @@ async function getGiantBombArt(baseurl: string | undefined) {
     }
 }
 
-async function getTGDBArt(gdbId: string | undefined) {
+async function getTGDBArt(gdbId?: string) {
     if (!gdbId) {
         return undefined;
     }
@@ -44,7 +44,7 @@ async function getTGDBArt(gdbId: string | undefined) {
     }
 }
 
-async function getMobyGamesArt(baseurl: string | undefined) {
+async function getMobyGamesArt(baseurl?: string) {
     if (!baseurl) {
         return undefined;
     }
@@ -64,7 +64,7 @@ async function getMobyGamesArt(baseurl: string | undefined) {
     }
 }
 
-async function getBingImage(keywords: string | undefined) {
+async function getBingImage(keywords?: string) {
     if (!keywords) {
         return undefined;
     }
@@ -78,9 +78,9 @@ async function getBingImage(keywords: string | undefined) {
     }
 }
 
-export async function resolveGameBoxArt(giantBombUrl: string | undefined,
-    thegamesdbId: string | undefined, mobygamesUrl: string | undefined,
-    game_name: string | undefined) {
+export async function resolveGameBoxArt(giantBombUrl?: string,
+    thegamesdbId?: string, mobygamesUrl?: string,
+    game_name?: string) {
     let art = await getGiantBombArt(giantBombUrl);
     if (!art) {
         art = await getTGDBArt(thegamesdbId);
@@ -97,7 +97,7 @@ export async function resolveGameBoxArt(giantBombUrl: string | undefined,
     return art;
 }
 
-export async function getSystemArt(system_name: string | undefined) {
+export async function getSystemArt(system_name?: string) {
     let art = await getBingImage(system_name);
     if (!art) {
         art = randomSystemImageUrl();
