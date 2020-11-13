@@ -32,7 +32,7 @@ async function convertGameData(gameToConvert: GameElement, base_url: string) {
             name: gameToConvert.title_clean?._text ?
                 gameToConvert.title_clean?._text : gameToConvert._attributes.name,
             category: getCateg(gameToConvert),
-            description: gameToConvert.plot?._text,
+            description: gameToConvert.plot?._text + '',
             media: {
                 thumbnail: boxart
             },

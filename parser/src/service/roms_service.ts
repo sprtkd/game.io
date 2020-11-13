@@ -17,7 +17,7 @@ export function processAllRoms(romlist: ROMElement[], baseurl: string, boxart: s
 }
 
 function convertRomData(rom: ROMElement, baseurl: string,
-    boxart: string, iter: number, total: number): RomIAGLModel {
+    boxart: string, iter: number, total: number) {
     try {
         let processedRom: RomIAGLModel = {
             description: "Rom " + iter + " of " + total,

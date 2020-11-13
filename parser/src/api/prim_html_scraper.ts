@@ -10,7 +10,7 @@ export async function getItemFromUrl(url: string, tokens: string[]) {
 }
 
 function splitAndJoin(html: string, tokens: string[]) {
-    let list1: string[];
+    let list1: string[] = [];
     for (let token of tokens) {
         list1 = html.split(token)
         if (token != tokens[tokens.length - 1]) {

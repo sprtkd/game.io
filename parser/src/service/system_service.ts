@@ -23,12 +23,14 @@ export async function convertSystemData(jsonStr: string) {
         games = [iAGLSystemJustParsed.datafile.game];
     }
     //process all games first
-    let processedGamesList: GameIAGLModel[] = await processAllGames(games,
-        iAGLSystemJustParsed.datafile.header.emu_baseurl._text);
+    let baseurl = iAGLSystemJustParsed.datafile.header.emu_baseurl._text ?
+        iAGLSystemJustParsed.datafile.header.emu_baseurl._text :
+        "https://archive.org/download/";
+    let processedGamesList: GameIAGLModel[] = await processAllGames(games, baseurl);
 
     let systemIAGLModel: SystemIAGLModel = {
-        name: iAGLSystemJustParsed.datafile.header.emu_name._text,
-        category: iAGLSystemJustParsed.datafile.header.emu_category._text,
+        name: iAGLSystemJustParsed.datafile.header.emu_name._text + '',
+        category: iAGLSystemJustParsed.datafile.header.emu_category._text + '',
         description: iAGLSystemJustParsed.datafile.header.emu_description._text
             + ': ' + iAGLSystemJustParsed.datafile.header.emu_category._text,
         gamesCount: processedGamesList.length,
