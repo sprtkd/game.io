@@ -10,7 +10,7 @@ export interface SystemIAGLModel {
     category: string;
     media: IAGLMedia;
     gamesCount: number;
-    gameslist: GameIAGLModel[] | string[];
+    gameslist: string[];
 }
 
 export interface GameIAGLModel {

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AppComponent } from '../app.component';
-import { convertGameData, getGiantBombArt } from '../models/iagl/iagl_utils';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 import { getItemFromLocalStorage } from '../models/ui/viewable_utils';
 import { convertGameToViewable } from './../models/ui/viewable_utils';
@@ -18,7 +17,6 @@ export class SystemComponent implements OnInit {
     this.getCurrentSystemFromLocalStorage();
     this.addBasicMenuItems();
     this.resolveGamesList();
-    this.fetchThumbnails();
   }
   addBasicMenuItems() {
     this.currentMenu.nextItems = [
@@ -44,7 +42,7 @@ export class SystemComponent implements OnInit {
   }
 
   resolveGamesList() {
-    this.appComponent.spinnerStart("Resolving Cache")
+    this.appComponent.spinnerStart("Resolving Cache");
     let gameslistCache = this.currentMenu.cache.gameListCache;
     if (!(gameslistCache instanceof Array)) {
       gameslistCache = [gameslistCache];

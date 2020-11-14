@@ -20,3 +20,15 @@ export function getCateg(gameToConvert: GameElement) {
 export function xmlToJson(xmlData: string) {
     return xml2json(xmlData, { compact: true, spaces: 4 });
 }
+
+export function gamePlot(plot?: string) {
+    let length = 100;
+    if (!plot) {
+        return '';
+    }
+    if (plot.length > length) {
+        return plot.substring(0, length - plot.length) + '..';
+    } else {
+        return plot;
+    }
+}

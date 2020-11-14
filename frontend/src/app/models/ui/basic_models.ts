@@ -1,5 +1,3 @@
-import { GameElement } from './iagl_system_parser_roms';
-
 export interface BaseGitContentModel {
     name: string;
     download_url: string;
@@ -8,30 +6,30 @@ export interface BaseGitContentModel {
 
 export interface SystemIAGLModel {
     name: string;
-    basename: string;
     description: string;
     category: string;
-    base_url: string;
     media: IAGLMedia;
     gamesCount: number;
-    gameslist: GameIAGLModel[];
-    cache: GameElement[];
+    gameslist: GameIAGLModel[] | string[];
 }
 
 export interface GameIAGLModel {
     name: string;
     description: string;
     category: string;
-    download_url: string;
-    cacheImgUrl: string;
     media: IAGLMedia;
-    gameSize: number;
+    romsCount: number;
+    romsList: RomIAGLModel[];
 }
 
 export interface IAGLMedia {
     thumbnail: string;
-    banner: string;
-    fanart: string;
-    logo: string;
-    trailer: string;
+}
+
+export interface RomIAGLModel {
+    name: string;
+    description: string;
+    media: IAGLMedia;
+    downloadUrl: string;
+    downloadSize: number;
 }

@@ -1,5 +1,3 @@
-import { GameElement } from '../iagl/iagl_system_parser_roms';
-
 export interface GameMenuItem {
     name: string;
     url: string;
@@ -11,7 +9,6 @@ export interface GameMenuItem {
     prev: string;
     next: string;
     nextItems: GameMenuItem[];
-    cache?: GameCache
 }
 
 export enum GameItemType {
@@ -20,9 +17,4 @@ export enum GameItemType {
     SYSTEM = "system",
     MASTER = "master",
     CACHE_CONSOLE = "cache_console"
-}
-
-export interface GameCache {
-    gameListCache?: GameElement[] | GameElement;
-    giantBombUrl?: string;
 }

@@ -1,22 +1,17 @@
 import { GameIAGLModel, RomIAGLModel } from "../models/basic_models";
 import { resolveGameBoxArt } from "../utils/boxart_utils";
-import { getCateg } from "../utils/iagl_helper_utils";
+import { gamePlot, getCateg } from "../utils/iagl_helper_utils";
 import { GameElement, ROMElement } from "../utils/iagl_system_parser_roms";
+import { writeGameToFile } from "../writer/json_write";
 import { processAllRoms } from "./roms_service";
 
-export async function processAllGames(gamelist: GameElement[], base_url: string) {
-    let processedGamesList: GameIAGLModel[] = [];
+export async function processAllGames(gamelist: GameElement[], base_url: string, sys_path: string) {
     for (let game of gamelist) {
-        let processedGame = await convertGameData(game, base_url);
-        if (processedGame) {
-            console.log("Game processed: " + processedGame.name);
-            processedGamesList.push(processedGame);
-        }
+        await convertGameData(game, base_url, sys_path);
     }
-    return processedGamesList;
 }
 
-async function convertGameData(gameToConvert: GameElement, base_url: string) {
+async function convertGameData(gameToConvert: GameElement, base_url: string, sys_path: string) {
     try {
         let romList: ROMElement[];
         if (gameToConvert.rom instanceof Array) {
@@ -32,16 +27,18 @@ async function convertGameData(gameToConvert: GameElement, base_url: string) {
             name: gameToConvert.title_clean?._text ?
                 gameToConvert.title_clean?._text : gameToConvert._attributes.name,
             category: getCateg(gameToConvert),
-            description: gameToConvert.plot?._text + '',
+            description: gamePlot(gameToConvert.plot?._text),
             media: {
                 thumbnail: boxart
             },
             romsCount: processedRomsList.length,
             romsList: processedRomsList
         }
-        return returnGame;
+        writeGameToFile(returnGame, sys_path);
+        console.log("Game processed: " + returnGame.name);
     } catch (error) {
-        return undefined;
+        console.log("Game process error: " + error);
+        return;
     }
 
 }

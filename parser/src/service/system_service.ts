@@ -2,19 +2,19 @@ import { getXmlData } from "../api/github_call";
 import { GameIAGLModel, SystemIAGLModel } from "../models/basic_models";
 import { xmlToJson } from "../utils/iagl_helper_utils";
 import { ConvertIaglSystem, GameElement, IAGLSystem } from "../utils/iagl_system_parser_roms";
+import { writeSystemToJson } from "../writer/json_write";
 import { getSystemArt } from "./../utils/boxart_utils";
 import { processAllGames } from "./games_service";
 
 export async function processSystemData(url: string) {
     try {
-        return await convertSystemData(xmlToJson(await getXmlData(url)));
+        await convertAndSaveSystemData(xmlToJson(await getXmlData(url)));
     } catch (error) {
         console.error("Error while processing system: " + url);
-        return undefined;
     }
 }
 
-export async function convertSystemData(jsonStr: string) {
+export async function convertAndSaveSystemData(jsonStr: string) {
     let iAGLSystemJustParsed: IAGLSystem = ConvertIaglSystem(jsonStr);
     let games: GameElement[];
     if (iAGLSystemJustParsed.datafile.game instanceof Array) {
@@ -22,24 +22,23 @@ export async function convertSystemData(jsonStr: string) {
     } else {
         games = [iAGLSystemJustParsed.datafile.game];
     }
-    //process all games first
     let baseurl = iAGLSystemJustParsed.datafile.header.emu_baseurl._text ?
         iAGLSystemJustParsed.datafile.header.emu_baseurl._text :
         "https://archive.org/download/";
-    let processedGamesList: GameIAGLModel[] = await processAllGames(games, baseurl);
-
     let systemIAGLModel: SystemIAGLModel = {
         name: iAGLSystemJustParsed.datafile.header.emu_name._text + '',
         category: iAGLSystemJustParsed.datafile.header.emu_category._text + '',
         description: iAGLSystemJustParsed.datafile.header.emu_description._text
             + ': ' + iAGLSystemJustParsed.datafile.header.emu_category._text,
-        gamesCount: processedGamesList.length,
-        gameslist: processedGamesList,
+        gamesCount: 0,
+        gameslist: [],
         media: {
             thumbnail: await getSystemArt(iAGLSystemJustParsed.datafile.header.emu_description._text)
         }
     }
-    return systemIAGLModel;
+    let syspath = writeSystemToJson(systemIAGLModel);
+    console.log("System processed: Name: " + systemIAGLModel.name);
+    await processAllGames(games, baseurl, syspath);
 }
 
 

@@ -13,24 +13,15 @@ const JSON_EXT = '.json';
 
 export function writeSystemToJson(systemToWrite: SystemIAGLModel) {
     console.log("Writing: " + systemToWrite.name);
-    let gameslist = (systemToWrite.gameslist as GameIAGLModel[]);
-    let gamesPathList: string[] = [];
     let systemFolder = convertToFilename(systemToWrite.name);
     let systemPath = SYSTEMS_PATH + systemFolder + '/';
-    for (let game of gameslist) {
-        gamesPathList.push(writeGameToFile(game, systemPath));
-    }
-    systemToWrite.gameslist = gamesPathList;
-    if (systemToWrite.gameslist.length != systemToWrite.gamesCount) {
-        console.log("Games count not matching");
-        systemToWrite.gameslist.length = systemToWrite.gamesCount;
-    }
     let systemFilePath = systemPath + SYSTEM_FILE;
     writeFile(systemFilePath, systemToWrite);
     updateMasterFile(systemFilePath);
+    return systemPath;
 }
 
-function writeGameToFile(gameToWrite: GameIAGLModel, systemPath: string): string {
+export function writeGameToFile(gameToWrite: GameIAGLModel, systemPath: string) {
     let gameFileName = convertToFilename(gameToWrite.name);
     let gameFilePath = systemPath + GAMES_PATH + gameFileName;
     let counter = 1;
@@ -39,7 +30,14 @@ function writeGameToFile(gameToWrite: GameIAGLModel, systemPath: string): string
     }
     gameFilePath = gameFilePath + JSON_EXT;
     writeFile(gameFilePath, gameToWrite);
-    return gameFilePath;
+    updateSystemFile(gameFilePath, systemPath)
+}
+
+function updateSystemFile(gameFilePath: string, systemPath: string) {
+    let system: SystemIAGLModel = readFile(systemPath + SYSTEM_FILE);
+    system.gamesCount = system.gamesCount + 1;
+    system.gameslist.push(gameFilePath);
+    writeFile(systemPath + SYSTEM_FILE, system);
 }
 
 function updateMasterFile(systemFilePath: string) {

@@ -15,11 +15,6 @@ export async function getListFromIAGL() {
 async function processAllSystems(datalist: BaseGitContentModel[]) {
     for (let data of datalist) {
         console.log("Processing: " + data.name);
-        let systemProcessed = await processSystemData(data.download_url);
-        if (systemProcessed) {
-            console.log("System processed: Name: " + systemProcessed.name
-                + "games count: " + systemProcessed.gamesCount);
-            writeSystemToJson(systemProcessed);
-        }
+        await processSystemData(data.download_url);
     }
 }
