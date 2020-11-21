@@ -2,7 +2,7 @@
     <div *ngFor="let game of gameItems">
         <div *ngIf="game.active">
             {{game.name}}
-            <span *ngIf="game.type != 'system'">
+            <span *ngIf="game.type != 'internal'">
                 <span class="count-detail">
                     | {{game.countDetail}} -
                 </span>

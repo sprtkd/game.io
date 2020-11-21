@@ -1,20 +1,21 @@
 export interface GameMenuItem {
     name: string;
-    url: string;
+    renderUrl: string;
+    thumbnailUrl: string;
     type: GameItemType;
     active: boolean;
     isHashBorder: boolean;
     description?: string;
-    countDetail?: string;
-    prev: string;
-    next: string;
+    countDetail: string;
+    prevRedirect: string;
+    nextRedirect: string;
     nextItems: GameMenuItem[];
 }
 
 export enum GameItemType {
     GAME = "game",
-    SUBMENU = "submenu",
-    SYSTEM = "system",
+    CONSOLE = "console",
+    INTERNAL = "internal",
     MASTER = "master",
-    CACHE_CONSOLE = "cache_console"
+    ROM = "rom"
 }

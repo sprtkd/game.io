@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppComponent } from '../app.component';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
-import { getItemFromLocalStorage } from '../models/ui/viewable_utils';
-import { convertGameToViewable } from './../models/ui/viewable_utils';
 
 @Component({
   selector: 'app-system',
@@ -14,11 +12,11 @@ export class SystemComponent implements OnInit {
   constructor(public appComponent: AppComponent) { }
 
   ngOnInit(): void {
-    this.getCurrentSystemFromLocalStorage();
+/*     this.getCurrentSystemFromLocalStorage();
     this.addBasicMenuItems();
-    this.resolveGamesList();
+    this.resolveGamesList(); */
   }
-  addBasicMenuItems() {
+/*   addBasicMenuItems() {
     this.currentMenu.nextItems = [
       {
         name: "Back To Systems",
@@ -50,7 +48,7 @@ export class SystemComponent implements OnInit {
     let syscount = 0;
     for (let game of gameslistCache) {
       try {
-        this.currentMenu.nextItems.push(convertGameToViewable(convertGameData(game)));
+        //this.currentMenu.nextItems.push(convertGameToViewable(convertGameData(game)));
         syscount += 1;
         this.currentMenu.countDetail = syscount + " Games";
       } catch (error) {
@@ -58,15 +56,6 @@ export class SystemComponent implements OnInit {
       }
     }
     this.appComponent.spinnerStop("Games Cache resolved");
-  }
-
-  async fetchThumbnails() {
-    this.appComponent.spinnerStart("Scraping Art");
-    for (let game of this.currentMenu.nextItems) {
-      let url = await getGiantBombArt(game.cache?.giantBombUrl);
-      game.url = url;
-    }
-    this.appComponent.spinnerStop("Scraping finished");
-  }
+  } */
 
 }

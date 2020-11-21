@@ -1,16 +1,10 @@
-export interface BaseGitContentModel {
-    name: string;
-    download_url: string;
-    type: string;
-}
-
 export interface SystemIAGLModel {
     name: string;
     description: string;
     category: string;
     media: IAGLMedia;
     gamesCount: number;
-    gameslist: GameIAGLModel[] | string[];
+    gameslist: string[];
 }
 
 export interface GameIAGLModel {
@@ -32,4 +26,12 @@ export interface RomIAGLModel {
     media: IAGLMedia;
     downloadUrl: string;
     downloadSize: number;
+}
+
+export interface MasterInfoModel {
+    dateOfUpdate: Date;
+    maintainer: string;
+    githubRepo: string;
+    systemCount: number;
+    systemlist: string[];
 }

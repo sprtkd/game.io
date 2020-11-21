@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AppComponent } from '../app.component';
 import { FetchIaglService } from '../services/fetch-iagl.service';
-import { BaseGitContentModel } from 'src/app/models/iagl/base_model';
 import { GameItemType, GameMenuItem } from 'src/app/models/ui/game-item';
-import { cleanData, convertSystemData, xmlToJson } from "./../models/iagl/iagl_utils";
-import { convertSystemToViewable } from './../models/ui/viewable_utils';
+import { MasterInfoModel, SystemIAGLModel } from "../models/ui/basic_models";
+import { convertSystemToViewable } from '../utils/render_utils';
 
 @Component({
   selector: 'app-home',
@@ -16,95 +15,88 @@ export class HomeComponent implements OnInit {
     active: false,
     isHashBorder: false,
     name: "Main Menu",
-    next: "/",
     nextItems: [],
-    prev: "/",
     type: GameItemType.MASTER,
-    url: "",
-    cache: undefined,
-    countDetail: "0 Systems",
-    description: "Main menu"
+    countDetail: "0",
+    nextRedirect: "/",
+    prevRedirect: "/",
+    renderUrl: "/",
+    thumbnailUrl: "/"
   }
   constructor(private fetchIaglService: FetchIaglService, public appComponent: AppComponent) { }
-
+  MAIN_URL = "assets/main.json";
   ngOnInit(): void {
     this.addBasicMenuItems();
-    this.getListFromIAGL();
+    this.getSystems();
   }
 
   addBasicMenuItems() {
     this.currentMenu.nextItems = [
       {
+        active: false,
+        isHashBorder: false,
         name: "Settings",
-        url: "https://i.postimg.cc/X7SSnLHG/new.png",
-        type: GameItemType.SYSTEM,
-        active: false,
-        isHashBorder: false,
-        next: "/",
-        nextItems: undefined,
-        prev: "/"
+        nextItems: [],
+        type: GameItemType.INTERNAL,
+        countDetail: "0",
+        nextRedirect: "/settings",
+        prevRedirect: "/",
+        renderUrl: "/",
+        thumbnailUrl: "https://i.postimg.cc/X7SSnLHG/new.png"
       },
       {
+        active: false,
+        isHashBorder: false,
         name: "Info",
-        url: "https://i.pinimg.com/564x/16/b2/75/16b275a88d210734f768d4f0be2fd903.jpg",
-        type: GameItemType.SYSTEM,
-        active: false,
-        isHashBorder: false,
-        next: "/",
-        nextItems: undefined,
-        prev: "/"
+        nextItems: [],
+        type: GameItemType.INTERNAL,
+        countDetail: "0",
+        nextRedirect: "/info",
+        prevRedirect: "/",
+        renderUrl: this.MAIN_URL,
+        thumbnailUrl: "https://i.pinimg.com/564x/16/b2/75/16b275a88d210734f768d4f0be2fd903.jpg"
       },
       {
-        name: "Search",
-        url: "https://i.pinimg.com/564x/d0/db/51/d0db51bfb8797366caebdf2a238849f0.jpg",
-        type: GameItemType.SYSTEM,
         active: false,
         isHashBorder: false,
-        next: "/",
-        nextItems: undefined,
-        prev: "/"
+        name: "Search",
+        nextItems: [],
+        type: GameItemType.INTERNAL,
+        countDetail: "0",
+        nextRedirect: "/search",
+        prevRedirect: "/",
+        renderUrl: "/",
+        thumbnailUrl: "https://i.pinimg.com/564x/d0/db/51/d0db51bfb8797366caebdf2a238849f0.jpg"
       }
     ]
   }
 
-  getListFromIAGL() {
-    this.appComponent.spinnerStart("Fetching from IAGL");
-    this.fetchIaglService.getAllSystemXMLs().subscribe((data: BaseGitContentModel[]) => {
-      cleanData(data);
-      this.appComponent.spinnerStop("IAGL Fetch Success");
-      this.processAllSystems(data);
+  getSystems() {
+    this.appComponent.spinnerStart("Fetching Systems");
+    this.fetchIaglService.getAnyJson(this.MAIN_URL).subscribe((data: MasterInfoModel) => {
+      this.processSystems(data.systemlist);
+      this.appComponent.spinnerStop("System List Fetched");
     },
       error => {
-        this.appComponent.spinnerStop("IAGL Fetch Failed", error);
+        this.appComponent.spinnerStop("Systems Fetch Failed", error);
       });
   }
 
-  async processAllSystems(datalist: BaseGitContentModel[]) {
-    this.appComponent.spinnerStart("Fetching System data from IAGL");
-    let syscount = 0;
-    for (let data of datalist) {
-      if (await this.fetchXmlToJsonData(data.download_url)) {
-        syscount += 1;
-        this.currentMenu.countDetail = syscount + " Systems Loaded";
-      }
+  processSystems(systems: string[]) {
+    let currCount = 0;
+    for (let systemUrl of systems) {
+      this.fetchIaglService.getAnyJson(systemUrl).subscribe((data: SystemIAGLModel) => {
+        let viewSystem = convertSystemToViewable(data, systemUrl);
+        this.appComponent.notify(viewSystem.name + " Loaded");
+        this.currentMenu.nextItems.push(viewSystem);
+        currCount += 1;
+        this.currentMenu.countDetail = currCount + " Systems";
+      },
+        error => {
+          this.appComponent.notify("System fetch Failed", error);
+        });
     }
-    this.appComponent.spinnerStop("System fetch complete");
   }
 
-  async fetchXmlToJsonData(url: string) {
-    try {
-      let data = await this.fetchIaglService.getXmlData(url).toPromise();
-      let system = await convertSystemData(xmlToJson(data));
-      if (!system) {
-        return false;
-      }
-      this.currentMenu.nextItems.push(convertSystemToViewable(system));
-      this.appComponent.notify("Fetch Success: " + system.name);
-      return true;
-    } catch (error) {
-      this.appComponent.notify("IAGL Fetch Failed", error);
-    }
-    return false;
-  }
 
 }
