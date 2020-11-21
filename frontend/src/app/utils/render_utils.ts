@@ -1,4 +1,4 @@
-import { GameIAGLModel, SystemIAGLModel } from '../models/ui/basic_models';
+import { GameIAGLModel, RomIAGLModel, SystemIAGLModel } from '../models/ui/basic_models';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 
 export function convertSystemToViewable(system: SystemIAGLModel): GameMenuItem {
@@ -31,6 +31,23 @@ export function convertGameToViewable(game: GameIAGLModel): GameMenuItem {
         prevRedirect: "/system",
         nextItems: [],
         renderUrl: game.myOwnUrl
+    }
+    return gameUI;
+}
+
+export function convertRomToViewable(rom: RomIAGLModel): GameMenuItem {
+    let gameUI: GameMenuItem = {
+        active: false,
+        isHashBorder: true,
+        name: rom.name,
+        nextRedirect: rom.downloadUrl,
+        type: GameItemType.ROM,
+        thumbnailUrl: rom.media.thumbnail,
+        countDetail: rom.downloadSize + " MB",
+        description: rom.description,
+        prevRedirect: "/",
+        nextItems: [],
+        renderUrl: "rom"
     }
     return gameUI;
 }

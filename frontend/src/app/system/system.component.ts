@@ -23,7 +23,7 @@ export class SystemComponent implements OnInit {
   addBasicMenuItems() {
     this.currentMenu.nextItems = [
       {
-        name: "Back To Systems",
+        name: "Back To Main Menu",
         countDetail: "0",
         renderUrl: "",
         prevRedirect: "/",
@@ -44,7 +44,7 @@ export class SystemComponent implements OnInit {
         this.currentMenu = viewSystem;
         this.addBasicMenuItems();
         this.appComponent.notify(viewSystem.name + " Loaded");
-        this.getAllNodes(data.gameslist);
+        this.resolveGamesList(data.gameslist);
       },
         error => {
           this.appComponent.notify("System fetch Failed", error);
@@ -54,23 +54,7 @@ export class SystemComponent implements OnInit {
     }
   }
 
-  resolveGamesList(gameslist: string[]) {
-    let currCount = 0;
-    for (let gameUrl of gameslist) {
-      this.fetchIaglService.getAnyJson<GameIAGLModel>(gameUrl).subscribe((data: GameIAGLModel) => {
-        let viewSystem = convertGameToViewable(data);
-        currCount += 1;
-        this.currentMenu.nextItems.push(viewSystem);
-        this.appComponent.notify(viewSystem.name + " (" + currCount + "/" + gameslist.length + ") Loaded");
-        this.currentMenu.countDetail = currCount + " Games";
-      },
-        error => {
-          this.appComponent.notify("System fetch Failed", error);
-        });
-    }
-  }
-
-  public getAllNodes(gameslist: string[]) {
+  public resolveGamesList(gameslist: string[]) {
     let currCount = 0;
     from(gameslist).pipe(
       mergeMap(gameUrl => this.fetchIaglService.getAnyJson<GameIAGLModel>(gameUrl), 300)

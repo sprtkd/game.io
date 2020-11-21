@@ -11,6 +11,7 @@ import { ActionBarComponent } from './common/action-bar/action-bar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { SystemComponent } from './system/system.component';
+import { GameviewComponent } from './gameview/gameview.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { SystemComponent } from './system/system.component';
     MenuItemComponent,
     ActionBarComponent,
     HomeComponent,
-    SystemComponent
+    SystemComponent,
+    GameviewComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { saveItemToLocalStorage } from 'src/app/utils/render_utils';
-import { GameMenuItem } from "./../../models/ui/game-item";
+import { GameItemType, GameMenuItem } from "./../../models/ui/game-item";
 
 @Component({
   selector: 'app-menu-item',
@@ -31,8 +31,12 @@ export class MenuItemComponent implements OnInit {
   }
 
   takeAction() {
-    saveItemToLocalStorage(this.gameItem.type, this.gameItem.renderUrl);
-    this.router.navigateByUrl(this.gameItem.nextRedirect);
+    if (this.gameItem.type == GameItemType.ROM) {
+      window.open(this.gameItem.nextRedirect, '_blank');
+    } else {
+      saveItemToLocalStorage(this.gameItem.type, this.gameItem.renderUrl);
+      this.router.navigateByUrl(this.gameItem.nextRedirect);
+    }
   }
 
 }

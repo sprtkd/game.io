@@ -1,10 +1,10 @@
 <div class="card" (mouseenter)="gameItem.active=true" (mouseleave)="gameItem.active=false" (click)="takeAction()">
     <div class="footer" *ngIf="gameItem.active"
         [ngStyle]="{'background-color': gameItem.isHashBorder? hashCode(gameItem.name): 'rgba(136, 136, 136, 0.897)'}">
-        <span *ngIf="gameItem.type != 'console'" class="material-icons">
+        <span *ngIf="gameItem.type != 'rom'" class="material-icons">
             play_circle_filled
         </span>
-        <span *ngIf="gameItem.type == 'console'" class="material-icons">
+        <span *ngIf="gameItem.type == 'rom'" class="material-icons">
             arrow_circle_down
         </span>
     </div>
