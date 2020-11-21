@@ -1,7 +1,7 @@
 import { GameIAGLModel, SystemIAGLModel } from '../models/ui/basic_models';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 
-export function convertSystemToViewable(system: SystemIAGLModel, renderUrlStr: string): GameMenuItem {
+export function convertSystemToViewable(system: SystemIAGLModel): GameMenuItem {
     let gameItem: GameMenuItem = {
         name: system.name,
         type: GameItemType.CONSOLE,
@@ -13,12 +13,12 @@ export function convertSystemToViewable(system: SystemIAGLModel, renderUrlStr: s
         prevRedirect: "/",
         nextItems: [],
         thumbnailUrl: system.media.thumbnail,
-        renderUrl: renderUrlStr
+        renderUrl: system.myOwnUrl
     };
     return gameItem;
 }
 
-export function convertGameToViewable(game: GameIAGLModel, renderUrlStr: string): GameMenuItem {
+export function convertGameToViewable(game: GameIAGLModel): GameMenuItem {
     let gameUI: GameMenuItem = {
         active: false,
         isHashBorder: true,
@@ -26,11 +26,11 @@ export function convertGameToViewable(game: GameIAGLModel, renderUrlStr: string)
         nextRedirect: "/viewgame",
         type: GameItemType.GAME,
         thumbnailUrl: game.media.thumbnail,
-        countDetail: game.romsCount + "Roms",
+        countDetail: game.romsCount + " Roms",
         description: game.category,
         prevRedirect: "/system",
         nextItems: [],
-        renderUrl: renderUrlStr
+        renderUrl: game.myOwnUrl
     }
     return gameUI;
 }

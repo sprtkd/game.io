@@ -85,11 +85,11 @@ export class HomeComponent implements OnInit {
   processSystems(systems: string[]) {
     let currCount = 0;
     for (let systemUrl of systems) {
-      this.fetchIaglService.getAnyJson(systemUrl).subscribe((data: SystemIAGLModel) => {
-        let viewSystem = convertSystemToViewable(data, systemUrl);
-        this.appComponent.notify(viewSystem.name + " Loaded");
-        this.currentMenu.nextItems.push(viewSystem);
+      this.fetchIaglService.getAnyJson<SystemIAGLModel>(systemUrl).subscribe((data: SystemIAGLModel) => {
+        let viewSystem = convertSystemToViewable(data);
         currCount += 1;
+        this.currentMenu.nextItems.push(viewSystem);
+        this.appComponent.notify(viewSystem.name + " (" + currCount + "/" + systems.length + ") Loaded");
         this.currentMenu.countDetail = currCount + " Systems";
       },
         error => {

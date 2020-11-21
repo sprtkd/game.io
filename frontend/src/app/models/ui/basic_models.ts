@@ -5,6 +5,7 @@ export interface SystemIAGLModel {
     media: IAGLMedia;
     gamesCount: number;
     gameslist: string[];
+    myOwnUrl: string;
 }
 
 export interface GameIAGLModel {
@@ -14,6 +15,7 @@ export interface GameIAGLModel {
     media: IAGLMedia;
     romsCount: number;
     romsList: RomIAGLModel[];
+    myOwnUrl: string;
 }
 
 export interface IAGLMedia {

@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { from, of } from 'rxjs';
+import { map, catchError, mergeMap } from 'rxjs/operators';
+
 import { AppComponent } from '../app.component';
+import { GameIAGLModel, SystemIAGLModel } from '../models/ui/basic_models';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
+import { FetchIaglService } from '../services/fetch-iagl.service';
+import { convertGameToViewable, convertSystemToViewable, getItemFromLocalStorage } from '../utils/render_utils';
 
 @Component({
   selector: 'app-system',
@@ -9,53 +15,75 @@ import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 })
 export class SystemComponent implements OnInit {
   currentMenu: GameMenuItem;
-  constructor(public appComponent: AppComponent) { }
+  constructor(private fetchIaglService: FetchIaglService, public appComponent: AppComponent) { }
 
   ngOnInit(): void {
-/*     this.getCurrentSystemFromLocalStorage();
-    this.addBasicMenuItems();
-    this.resolveGamesList(); */
+    this.getCurrentSystemFromLcSAndJson();
   }
-/*   addBasicMenuItems() {
+  addBasicMenuItems() {
     this.currentMenu.nextItems = [
       {
         name: "Back To Systems",
-        url: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQu0Mo1q16-tlH3JqsbEwub5vcorpzy7a2WtQ&usqp=CAU",
-        type: GameItemType.SYSTEM,
+        countDetail: "0",
+        renderUrl: "",
+        prevRedirect: "/",
+        nextRedirect: "/",
+        thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQu0Mo1q16-tlH3JqsbEwub5vcorpzy7a2WtQ&usqp=CAU",
+        type: GameItemType.INTERNAL,
         active: false,
         isHashBorder: false,
-        next: "/",
-        nextItems: undefined,
-        prev: "/"
+        nextItems: []
       }];
   }
 
-  getCurrentSystemFromLocalStorage() {
-    let currSys = getItemFromLocalStorage(GameItemType.SUBMENU);
+  getCurrentSystemFromLcSAndJson() {
+    let currSys = getItemFromLocalStorage(GameItemType.CONSOLE);
     if (currSys) {
-      this.currentMenu = currSys;
+      this.fetchIaglService.getAnyJson<SystemIAGLModel>(currSys).subscribe((data: SystemIAGLModel) => {
+        let viewSystem = convertSystemToViewable(data);
+        this.currentMenu = viewSystem;
+        this.addBasicMenuItems();
+        this.appComponent.notify(viewSystem.name + " Loaded");
+        this.getAllNodes(data.gameslist);
+      },
+        error => {
+          this.appComponent.notify("System fetch Failed", error);
+        });
     } else {
       this.appComponent.notify("No System selected!", new Error("No System selected"));
     }
   }
 
-  resolveGamesList() {
-    this.appComponent.spinnerStart("Resolving Cache");
-    let gameslistCache = this.currentMenu.cache.gameListCache;
-    if (!(gameslistCache instanceof Array)) {
-      gameslistCache = [gameslistCache];
+  resolveGamesList(gameslist: string[]) {
+    let currCount = 0;
+    for (let gameUrl of gameslist) {
+      this.fetchIaglService.getAnyJson<GameIAGLModel>(gameUrl).subscribe((data: GameIAGLModel) => {
+        let viewSystem = convertGameToViewable(data);
+        currCount += 1;
+        this.currentMenu.nextItems.push(viewSystem);
+        this.appComponent.notify(viewSystem.name + " (" + currCount + "/" + gameslist.length + ") Loaded");
+        this.currentMenu.countDetail = currCount + " Games";
+      },
+        error => {
+          this.appComponent.notify("System fetch Failed", error);
+        });
     }
-    let syscount = 0;
-    for (let game of gameslistCache) {
-      try {
-        //this.currentMenu.nextItems.push(convertGameToViewable(convertGameData(game)));
-        syscount += 1;
-        this.currentMenu.countDetail = syscount + " Games";
-      } catch (error) {
-        this.appComponent.notify("Failed to resolve cache", error);
-      }
-    }
-    this.appComponent.spinnerStop("Games Cache resolved");
-  } */
+  }
+
+  public getAllNodes(gameslist: string[]) {
+    let currCount = 0;
+    from(gameslist).pipe(
+      mergeMap(gameUrl => this.fetchIaglService.getAnyJson<GameIAGLModel>(gameUrl), 300)
+    ).subscribe((data: GameIAGLModel) => {
+      let viewSystem = convertGameToViewable(data);
+      currCount += 1;
+      this.currentMenu.nextItems.push(viewSystem);
+      this.appComponent.notify(viewSystem.name + " (" + currCount + "/" + gameslist.length + ") Loaded");
+      this.currentMenu.countDetail = currCount + " Games";
+    },
+      error => {
+        this.appComponent.notify("System fetch Failed", error);
+      });
+  }
 
 }
