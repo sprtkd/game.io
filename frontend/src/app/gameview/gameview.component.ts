@@ -3,7 +3,7 @@ import { AppComponent } from '../app.component';
 import { GameIAGLModel, RomIAGLModel } from '../models/ui/basic_models';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 import { FetchIaglService } from '../services/fetch-iagl.service';
-import { convertGameToViewable, convertRomToViewable, getItemFromLocalStorage } from '../utils/render_utils';
+import { convertGameToViewable, convertRomToViewable, createDummyLoadMenu, getItemFromLocalStorage } from '../utils/render_utils';
 
 @Component({
   selector: 'app-gameview',
@@ -11,7 +11,7 @@ import { convertGameToViewable, convertRomToViewable, getItemFromLocalStorage } 
   styleUrls: ['./gameview.component.scss']
 })
 export class GameviewComponent implements OnInit {
-  currentMenu: GameMenuItem;
+  currentMenu: GameMenuItem = createDummyLoadMenu();
   constructor(private fetchIaglService: FetchIaglService, public appComponent: AppComponent) { }
 
   ngOnInit(): void {
@@ -41,8 +41,8 @@ export class GameviewComponent implements OnInit {
         this.currentMenu = viewGame;
         this.addBasicMenuItems();
         this.appComponent.notify(viewGame.name + " Loaded");
+        viewGame.name = viewGame.name + " | " + getItemFromLocalStorage(GameItemType.LAST_SYSTEM);
         this.resolveRomsList(data.romsList);
-        this.currentMenu.countDetail = data.romsCount + " Roms";
       },
         error => {
           this.appComponent.notify("System fetch Failed", error);

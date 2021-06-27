@@ -17,5 +17,6 @@ export enum GameItemType {
     CONSOLE = "console",
     INTERNAL = "internal",
     MASTER = "master",
-    ROM = "rom"
+    ROM = "rom",
+    LAST_SYSTEM = "last_system"
 }

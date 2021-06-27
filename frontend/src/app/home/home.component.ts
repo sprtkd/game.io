@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
         nextRedirect: "/settings",
         prevRedirect: "/",
         renderUrl: "/",
-        thumbnailUrl: "https://i.postimg.cc/X7SSnLHG/new.png"
+        thumbnailUrl: "https://i.pinimg.com/564x/fd/ff/75/fdff75fc9508da75d5bd15caf9649c5c.jpg"
       },
       {
         active: false,

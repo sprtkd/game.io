@@ -59,3 +59,34 @@ export function getItemFromLocalStorage(lcStoreEnum: GameItemType): string {
 export function saveItemToLocalStorage(lcStoreEnum: GameItemType, renderUrl: string) {
     localStorage.setItem(lcStoreEnum + "lcStorage", renderUrl);
 }
+
+export function createDummyLoadMenu() {
+    let gameUI: GameMenuItem = {
+        active: false,
+        isHashBorder: true,
+        name: "Loading",
+        nextRedirect: "/",
+        type: GameItemType.INTERNAL,
+        thumbnailUrl: "",
+        countDetail: "Please wait",
+        description: "",
+        prevRedirect: "/",
+        nextItems: [
+            {
+                active: false,
+                isHashBorder: true,
+                name: "Loading",
+                nextRedirect: "/",
+                type: GameItemType.INTERNAL,
+                thumbnailUrl: "https://i.pinimg.com/originals/67/f3/e4/67f3e47575c8e0e8e6cca532ce9b320f.gif",
+                countDetail: "",
+                description: "",
+                prevRedirect: "/",
+                nextItems: [],
+                renderUrl: "/"
+            }
+        ],
+        renderUrl: "/"
+    }
+    return gameUI;
+}

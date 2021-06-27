@@ -13,16 +13,21 @@
 
 .custom-scroll::-webkit-scrollbar-track {
     border-radius: 10px;
-    background-color: #f5f5f5;
+    background-color: #f5f5f5a4;
 }
 
 .custom-scroll::-webkit-scrollbar {
-    height: 5px;
+    height: 15px;
     background-color: #f5f5f500;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
     border-radius: 15px;
+    background-image: linear-gradient(90deg, rgb(0, 55, 156), rgb(0, 4, 56));
+    min-width: 30%;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
     background-image: linear-gradient(90deg, rgb(0, 89, 255), rgb(0, 7, 99));
 }
 

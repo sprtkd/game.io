@@ -8,8 +8,10 @@
             arrow_circle_down
         </span>
     </div>
-
-    <img [src]="gameItem.thumbnailUrl" alt="Avatar" style="width:100%; box-sizing: border-box;"
+    <div class="unloaded-back">
+        {{gameItem.name}}
+    </div>
+    <img [src]="gameItem.thumbnailUrl" alt="Avatar"
         [ngStyle]="{'border': gameItem.isHashBorder? ('5px solid ' + hashCode(gameItem.name)): 'none'}"
         onerror="this.src='./assets/images/systemdefault.png';">
     <div class="game-name" *ngIf="gameItem.active">

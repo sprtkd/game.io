@@ -6,7 +6,7 @@ import { AppComponent } from '../app.component';
 import { GameIAGLModel, SystemIAGLModel } from '../models/ui/basic_models';
 import { GameItemType, GameMenuItem } from '../models/ui/game-item';
 import { FetchIaglService } from '../services/fetch-iagl.service';
-import { convertGameToViewable, convertSystemToViewable, getItemFromLocalStorage } from '../utils/render_utils';
+import { convertGameToViewable, convertSystemToViewable, createDummyLoadMenu, getItemFromLocalStorage, saveItemToLocalStorage } from '../utils/render_utils';
 
 @Component({
   selector: 'app-system',
@@ -14,7 +14,7 @@ import { convertGameToViewable, convertSystemToViewable, getItemFromLocalStorage
   styleUrls: ['./system.component.scss']
 })
 export class SystemComponent implements OnInit {
-  currentMenu: GameMenuItem;
+  currentMenu: GameMenuItem = createDummyLoadMenu();
   constructor(private fetchIaglService: FetchIaglService, public appComponent: AppComponent) { }
 
   ngOnInit(): void {
@@ -44,6 +44,7 @@ export class SystemComponent implements OnInit {
         this.currentMenu = viewSystem;
         this.addBasicMenuItems();
         this.appComponent.notify(viewSystem.name + " Loaded");
+        saveItemToLocalStorage(GameItemType.LAST_SYSTEM, viewSystem.name);
         this.resolveGamesList(data.gameslist);
       },
         error => {
@@ -63,7 +64,6 @@ export class SystemComponent implements OnInit {
       currCount += 1;
       this.currentMenu.nextItems.push(viewSystem);
       this.appComponent.notify(viewSystem.name + " (" + currCount + "/" + gameslist.length + ") Loaded");
-      this.currentMenu.countDetail = currCount + " Games";
     },
       error => {
         this.appComponent.notify("System fetch Failed", error);
